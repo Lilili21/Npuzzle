@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -102,7 +103,7 @@ public class Board {
             if (blocks[i] != 0) { //  1
                 num = blocks[i];
                 indexResult = Utils.getResultBoard().indexOf(num);
-                dist += Math.pow(i / dimension() - indexResult / dimension(), 2) + Math.pow(i % dimension() - indexResult % dimension(), 2);
+                dist += Math.sqrt(Math.pow(i / dimension() - indexResult / dimension(), 2) + Math.pow(i % dimension() - indexResult % dimension(), 2));
             }
             if (blocks[i] == 0) {
                 zero.setLocation(i / dimension(), i % dimension());
@@ -177,20 +178,8 @@ public class Board {
         return h == 0;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Board board = (Board) o;
-
-        if (board.dimension() != dimension()) return false;
-        for (int i = 0; i < blocks.length; i++) {
-            if (blocks[i] != board.blocks[i]) {
-                    return false;
-            }
-        }
-        return true;
+    public String getBlocksString(){
+        return Arrays.toString(blocks);
     }
 
     public Iterable<Board> neighbors() {

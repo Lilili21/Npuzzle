@@ -6,8 +6,10 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 public class Solver {
@@ -39,13 +41,13 @@ public class Solver {
                 return new Double(measure(o1)).compareTo(new Double(measure(o2)));
             }
         });
-        List<Board> closedSet = new ArrayList<>();
+        Map<String, Board> closedSet = new HashMap<>();
 
         priorityQueue.add(new ITEM(null, initial));
-        while (maximumNumberOfStates < 100000) {
+        while (maximumNumberOfStates < 1000000) {
             ITEM board = priorityQueue.poll();
             assert board != null;
-            closedSet.add(board.board);
+            closedSet.put(board.board.getBlocksString(),board.board);
             if (board.board.isGoal()) {
                 itemToList(new ITEM(board, board.board));
                 return;
@@ -54,12 +56,14 @@ public class Solver {
             everInOpenSet++;
             while (iterator.hasNext()) {
                 Board board1 = (Board) iterator.next();
-                if (board1 != null && !closedSet.contains(board1)) {
+                if (board1 != null && !closedSet.containsKey(board1.getBlocksString())) {
                     priorityQueue.add(new ITEM(board, board1));
                     maximumNumberOfStates++;
+
                 }
             }
         }
+        System.out.println(maximumNumberOfStates);
         throw new SolverException("Memory is full but puzzle is still unsolved.");
     }
 

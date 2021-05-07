@@ -52,7 +52,13 @@ public class Utils {
         int[] blocks;
 
         Scanner scanner = new Scanner(new File(fileName));
-        int size = Integer.parseInt(scanner.nextLine());
+        String line = scanner.nextLine();
+        while (line.contains("#") && scanner.hasNextLine()){
+            line = scanner.nextLine();
+        }
+        if (!scanner.hasNextLine())
+            throw new ParseProblemException("There is no size of puzzle in the file");
+        int size = Integer.parseInt(line);
         if (size == 0)
             throw new ParseProblemException("There is no size of puzzle in the file");
         blocks = parseBlocks(scanner, size);
@@ -67,11 +73,20 @@ public class Utils {
         int count = 0;
         int i;
         boolean hasZero = false;
+        String line;
 
         while (scanner.hasNextLine()){
             if (count > size)
                 throw new ParseProblemException("Wrong number of strings in puzzle");
-            elems = scanner.nextLine().trim().split("\\s+");
+            line = scanner.nextLine();
+            if (line.contains("#")) {
+                elems = line.trim().split("#");
+                if (elems[0].isEmpty())
+                    continue;
+                else
+                    line = elems[0];
+            }
+            elems = line.split("\\s+");
             if (elems.length != size)
                 throw new ParseProblemException("Wrong number of elements in String");
             i = -1;
